@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+"""
+meme - Annotate source code with comments from a rules file.
+
+Usage: meme <rules_file> <source_file> [output_file]
+
+Rules file format:
+  [1] Comment for line 1
+  [2] Comment for line 2
+"""
+
+import sys
+import re
+import os
+
+def parse_rules(rules_text):
+    rules = {}
+    pattern = re.compile(r'\[(\d+)(?:-\d+)?\]\s*(.*?)(?=\n\[|\Z)', re.DOTALL)
+    matches = pattern.findall(rules_text)
+    for line_num, comment in matches:
+        line_num = int(line_num)
+        comment = comment.strip().replace('\n', ' ')
+        rules[line_num] = comment
+    return rules
+
+def detect_comment_style(filename):
+    ext = os.path.splitext(filename)[1].lower()
+    styles = {
+        '.py': '#', '.sh': '#', '.rb': '#',
+        '.go': '//', '.js': '//', '.ts': '//', '.c': '//', '.cpp': '//',
+        '.java': '//', '.kt': '//', '.swift': '//', '.rs': '//',
+        '.lua': '--', '.sql': '--',
+    }
+    return styles.get(ext, '//')
+
+def annotate(source_text, rules, comment_style):
+    lines = source_text.split('\n')
+    result = []
+    for i, line in enumerate(lines, start=1):
+        if i in rules:
+            result.append(f"{line}  {comment_style} {rules[i]}")
+        else:
+            result.append(line)
+    return '\n'.join(result)
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: meme <rules_file> <source_file> [output_file]")
+        sys.exit(1)
+
+    rules_file, source_file = sys.argv[1], sys.argv[2]
+    output_file = sys.argv[3] if len(sys.argv) > 3 else None
+
+    with open(rules_file) as f:
+        rules_text = f.read()
+    with open(source_file) as f:
+        source_text = f.read()
+
+    rules = parse_rules(rules_text)
+    comment_style = detect_comment_style(source_file)
+    annotated = annotate(source_text, rules, comment_style)
+
+    if not output_file:
+        base, ext = os.path.splitext(source_file)
+        output_file = f"{base}_annotated{ext}"
+
+    with open(output_file, 'w') as f:
+        f.write(annotated)
+    print(f"Done! Annotated file: {output_file}")
+
+if __name__ == '__main__':
+    main()
