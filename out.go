@@ -18,7 +18,7 @@ func (m * PhysicalMemory)  Write(addr uint32 , value byte)  {
 func main(){
  mem := NewPhysicalMemory(1024)
  mem.Write(10 , 42)
- value := mem.Read(10)
+ value := mem.Read(10)  // reading from the 10 location
  fmt.Println("value at address 10 " , value )
 
  }

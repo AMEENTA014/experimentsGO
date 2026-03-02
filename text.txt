@@ -1,1 +1,2 @@
 [8] its used for byte size 
+[21] reading from the 10 location 
