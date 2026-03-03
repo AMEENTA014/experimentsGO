@@ -1,6 +1,7 @@
-package main 
+p
+ckage main   // package main is essential for executable   [2]    importing fmt and keeping the order of packaging and importing then declaration
 import("fmt")
-type PhysicalMemory struct{
+type PhysicalMemory struct{  // defining a data type which is considered as RAM , planning to use another function to allow space allocation
     data []byte
 }
 func NewPhysicalMemory(size int32 )   *PhysicalMemory {

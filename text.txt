@@ -1,2 +1,5 @@
+[1] package main is essential for executable 
+ [2]    importing fmt and keeping the order of packaging and importing then declaration 
+[3] defining a data type which is considered as RAM , planning to use another function to allow space allocation
 [8] its used for byte size 
 [21] reading from the 10 location 
